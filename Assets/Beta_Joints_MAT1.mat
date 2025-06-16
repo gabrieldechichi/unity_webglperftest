@@ -98,6 +98,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _AmbientIntensity: 0.02
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BlendOp: 0
@@ -133,7 +134,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _AmbientColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
+    - _AmbientColor: {r: 1, g: 1, b: 1, a: 1}
+    - _AmbientIntensity: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _BaseColor: {r: 0.612501, g: 0.38787547, b: 0.35089406, a: 1}
     - _Color: {r: 0.397, g: 0.20043167, b: 0.165946, a: 1}
     - _DiffuseColor: {r: 1, g: 1, b: 1, a: 1}

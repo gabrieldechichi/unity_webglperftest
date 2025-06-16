@@ -26,9 +26,7 @@ public class GridSpawner : MonoBehaviour
 
             if (animator != null)
             {
-                // Start the animation at a specific normalized time
-                float animationTime = (j * 12.0f) / clip.length;
-                animator.Play(0, -1, animationTime);
+                animator.Play(0, -1, Random.Range(0, clip.length));
             }
         }
     }
