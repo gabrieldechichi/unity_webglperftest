@@ -271,7 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxCamSpeed: 25
   minCamSpeed: 10
-  rotateInputScale: 5
+  rotateInputScale: 3
   maxPitch: 60
   minPitch: -60
   pitch: 45
