@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Profiling;
+using Unity.Profiling;
 
 public class StatsUI : MonoBehaviour
 {
@@ -10,6 +12,17 @@ public class StatsUI : MonoBehaviour
     private float averageFPS = 0.0f;
     private float currentDeltaTime = 0.0f;
     private GridSpawner gridSpawner;
+    private ProfilerRecorder trianglesRecorder;
+
+    private void OnEnable()
+    {
+        trianglesRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Triangles Count");
+    }
+
+    private void OnDisable()
+    {
+        trianglesRecorder.Dispose();
+    }
 
     private void Start()
     {
@@ -52,11 +65,20 @@ public class StatsUI : MonoBehaviour
         GUI.Label(new Rect(20, yOffset + lineHeight * 2, labelWidth, labelHeight),
                   string.Format("FPS: {0:0.0}", averageFPS), labelStyle);
 
-        GUI.Label(new Rect(20, yOffset + lineHeight * 3, labelWidth, labelHeight),
-                  "CPU Memory: 128 MB", labelStyle);
+        long totalMemory = Profiler.GetTotalAllocatedMemoryLong() / (1024 * 1024);
+        long reservedMemory = Profiler.GetTotalReservedMemoryLong() / (1024 * 1024);
+        long gpuMemory = Profiler.GetAllocatedMemoryForGraphicsDriver() / (1024 * 1024);
 
+        GUI.Label(new Rect(20, yOffset + lineHeight * 3, labelWidth, labelHeight),
+                  string.Format("CPU Memory: {0}/{1} MB", totalMemory, reservedMemory), labelStyle);
+
+        // GUI.Label(new Rect(20, yOffset + lineHeight * 4, labelWidth, labelHeight),
+        //           string.Format("GPU Memory: {0} MB", gpuMemory), labelStyle);
+
+        float triangleCount = trianglesRecorder.Valid ? trianglesRecorder.LastValue : 0;
+        triangleCount /= 1_000_000;
         GUI.Label(new Rect(20, yOffset + lineHeight * 4, labelWidth, labelHeight),
-                  "GPU Memory: 256 MB", labelStyle);
+                  string.Format("Triangles: {0:N2} M", triangleCount), labelStyle);
 
         GUI.Label(new Rect(20, yOffset + lineHeight * 5, labelWidth, labelHeight),
                   string.Format("Instance Count: {0}", gridSpawner != null ? gridSpawner.animCount : 0), labelStyle);
@@ -66,20 +88,14 @@ public class StatsUI : MonoBehaviour
 
         if (GUI.Button(new Rect(20, yOffset + lineHeight * 6, 120, 40), "+100", buttonStyle))
         {
-            if (gridSpawner != null)
-            {
-                gridSpawner.SpawnInstances(100);
-                gridSpawner.RepositionAllInstances();
-            }
+            gridSpawner.SpawnInstances(100);
+            gridSpawner.RepositionAllInstances();
         }
 
         if (GUI.Button(new Rect(150, yOffset + lineHeight * 6, 120, 40), "-100", buttonStyle))
         {
-            if (gridSpawner != null)
-            {
-                gridSpawner.DespawnInstances(100);
-                gridSpawner.RepositionAllInstances();
-            }
+            gridSpawner.DespawnInstances(100);
+            gridSpawner.RepositionAllInstances();
         }
     }
 }

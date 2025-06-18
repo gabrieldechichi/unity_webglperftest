@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [DefaultExecutionOrder(int.MaxValue)]
@@ -21,18 +22,19 @@ public class CameraController : MonoBehaviour
 
     void HandleMouseInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !IsMouseOverGUI())
         {
             isMouseLocked = true;
-            // Cursor.lockState = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
         else if (Input.GetMouseButtonUp(0))
         {
             isMouseLocked = false;
-            // Cursor.lockState = CursorLockMode.None;
+            Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
+
         if (isMouseLocked)
         {
             float mouseDeltaX = Input.GetAxis("Mouse X");
@@ -45,6 +47,14 @@ public class CameraController : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Euler(pitch, yaw, 0);
+    }
+    //
+
+    bool IsMouseOverGUI()
+    {
+        Vector2 mousePos = Input.mousePosition;
+        mousePos.y = Screen.height - mousePos.y;
+        return new Rect(10, 10, 350, 320).Contains(mousePos);
     }
 
     void HandleMovement()
